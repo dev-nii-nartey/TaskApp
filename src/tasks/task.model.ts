@@ -1,12 +1,12 @@
 export interface Task {
-  //   id: number;
+  id: string;
   title: string;
   description: string;
   status: TASK_STATUS;
 }
 
 export enum TASK_STATUS {
-  OPEN,
-  PROGRESS,
-  DONE,
+  OPEN = 'OPEN',
+  PROGRESS = 'PROGRESS',
+  DONE = 'DONE',
 }

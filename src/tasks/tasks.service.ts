@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TASK_STATUS, Task } from './task.model';
+import { CreateTaskDto, TaskIdDto } from './dto/create-task.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class TasksService {
@@ -9,9 +11,39 @@ export class TasksService {
     return this.tasks;
   }
 
-  createTask(title: string, description: string): Task {
-    const task = { title, description, status: TASK_STATUS.OPEN };
+  createTask(createtaskdto: CreateTaskDto): Task {
+    const { title, description } = createtaskdto;
+    const task = {
+      id: uuid.v1(),
+      title,
+      description,
+      status: TASK_STATUS.OPEN,
+    };
     this.tasks.push(task);
     return task;
+  }
+
+  deleteTask(taskId: TaskIdDto): void {
+    const { id } = taskId;
+    const index = this.tasks.findIndex((el) => {
+      return id == el.id;
+    });
+    this.tasks.splice(index, 1);
+  }
+
+  getTask(taskId: TaskIdDto):Task {
+    const { id } = taskId;
+    return this.tasks.find((el) => {
+      return id == el.id;
+    });
+  }
+
+  updateTaskStatus(element: Task, status: TASK_STATUS):Task {
+    element.status = status;
+    return element;
+  }
+
+  filterTasks(status: TASK_STATUS):Task[] {
+    return this.tasks.filter((el) => (el.status = status));
   }
 }
