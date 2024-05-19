@@ -23,19 +23,27 @@ export class TasksService {
     return task;
   }
 
-  deleteTask(taskId: TaskIdDto) {
+  deleteTask(taskId: TaskIdDto): void {
     const { id } = taskId;
     const index = this.tasks.findIndex((el) => {
       return id == el.id;
     });
-    return this.tasks.splice(index, 1);
+    this.tasks.splice(index, 1);
   }
 
-
-  getTask(taskId: TaskIdDto) {
+  getTask(taskId: TaskIdDto):Task {
     const { id } = taskId;
     return this.tasks.find((el) => {
       return id == el.id;
     });
+  }
+
+  updateTaskStatus(element: Task, status: TASK_STATUS):Task {
+    element.status = status;
+    return element;
+  }
+
+  filterTasks(status: TASK_STATUS):Task[] {
+    return this.tasks.filter((el) => (el.status = status));
   }
 }
