@@ -11,14 +11,19 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, TaskIdDto } from './dto/create-task.dto';
 import { TASK_STATUS } from './task.model';
+import { FilterDto } from './dto/filter-task.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  getTasks() {
-    return this.tasksService.getAllTasks();
+  getTasks(@Query() query: FilterDto) {
+    if (Object.keys(query).length) {
+      return this.tasksService.filterTasks(query);
+    } else {
+      return this.tasksService.getAllTasks();
+    }
   }
 
   @Post()
@@ -38,13 +43,8 @@ export class TasksController {
 
   @Patch('/:id')
   updateTask(@Param() taskdto: TaskIdDto, @Body('status') body: TASK_STATUS) {
-    console.log(body);
     const element = this.tasksService.getTask(taskdto);
     return this.tasksService.updateTaskStatus(element, body);
   }
 
-  @Post()
-  filterTasks(@Query('status') status: TASK_STATUS) {
-    return this.tasksService.filterTasks(status);
-  }
 }
